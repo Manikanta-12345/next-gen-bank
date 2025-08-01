@@ -9,6 +9,7 @@ import com.nextgen.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class KycProcessorService {
         this.kafkaTemplate = kafkaTemplate;
         this.customerAccountRepository = customerAccountRepository;
     }
-
+    @Transactional
     public void processKycInputEvent(NextGenKycEvent event, String customerId) {
         //read from s3 and for every event insert into audit table
         //retry and send to DLQ if any failure and insert into table for analysis
@@ -59,18 +60,25 @@ public class KycProcessorService {
     }
 
     private void saveCustomerRecord(NextGenKycEvent event, String customerId, String status) {
-        CustomerAccount account = null;
-        account = customerAccountRepository.findByCustomerId(customerId);
-        if (Objects.nonNull(account)) {
-            account.setId(account.getId());
+        try {
+            CustomerAccount account = null;
+            account = customerAccountRepository.findByCustomerId(customerId);
+            if (Objects.nonNull(account)) {
+                account.setId(account.getId());
+            } else {
+                account = new CustomerAccount();
+            }
+            account.setCustomerId(customerId);
+            account.setAadharNumber(event.getAadharNumber());
+            account.setPanNumber(event.getPanNumber());
+            account.setKycStatus(status);
+            account.setAccountType(AccountType.SAVINGS);
+            account.setIsActive("Y");
+            account.setCreatedDate(LocalDateTime.now());
+            customerAccountRepository.save(account);
+            log.info("Customer record saved for customerId {}", customerId);
+        }catch (Exception e){
+            log.error("Failed to save customer record for customerId {}", customerId, e);
         }
-        account.setAadharNumber(event.getAadharNumber());
-        account.setPanNumber(event.getPanNumber());
-        account.setKycStatus(status);
-        account.setAccountType(AccountType.SAVINGS);
-        account.setIsActive("Y");
-        account.setCreatedDate(LocalDateTime.now());
-        customerAccountRepository.save(account);
-        log.info("Customer record saved for customerId {}", customerId);
     }
 }

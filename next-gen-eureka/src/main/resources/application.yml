@@ -1,19 +1,7 @@
-server:
-    port: 8070
 
 spring:
   application:
     name: next-gen-eureka
 
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    fetch-registry: false
-    register-with-eureka: false
-    defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
-
-
-logging:
-  pattern:
-    console: "%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n"
+  config:
+    import: "optional:configserver:http://${CONFIGSERVER_URL}:8084/"

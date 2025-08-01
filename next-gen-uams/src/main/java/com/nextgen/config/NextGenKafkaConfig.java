@@ -30,10 +30,13 @@ public class NextGenKafkaConfig {
     @Value("${next.gen.kyc.output.consumer.group}")
     private String nextGenKycOutputConsumerGroup;
 
+    @Value("${next.gen.kafka.bootstrap-servers}")
+    private String nextGenKafkaBootstrapServers;
+
     // ------------------------ Consumer Config ------------------------
     public ConsumerFactory<String, NextGenKycEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, nextGenKafkaBootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, nextGenKycOutputConsumerGroup);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
