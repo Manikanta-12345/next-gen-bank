@@ -57,19 +57,34 @@ pipeline {
       environment {
         GIT_REPO_NAME = "next-gen-bank-helm"
         GIT_USER_NAME = "Manikanta-12345"
+        GIT_REPO_URL = "https://github.com/Manikanta-12345/next-gen-bank-helm.git"
       }
       steps {
         withCredentials([string(credentialsId: 'next-gen-git-secret', variable: 'GITHUB_TOKEN')]) {
           sh '''
+            # Clean up any previous clone
+            rm -rf helm-repo
+
+            # Clone the Helm repo
+            git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git helm-repo
+
+            cd helm-repo
+
+            # Set Git config
             git config user.email "suryamutyala757@gmail.com"
             git config user.name "Manikanta-12345"
+
+            # Update image tag in values.yml
             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-configserver/values.yml
+
+            # Commit and push the change
             git add next-gen-configserver/values.yml
-            git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+            git commit -m "Update configserver image to version ${BUILD_NUMBER}"
+            git push origin master
           '''
         }
       }
     }
+
   }
 }
