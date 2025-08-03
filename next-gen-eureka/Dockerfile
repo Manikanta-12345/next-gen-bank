@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-jre
 
 # Allow passing artifact dynamically (optional but good practice)
-ARG ARTIFACT=target/next-gen-configserver.jar
+ARG ARTIFACT=target/next-gen-eureka.jar
 
 WORKDIR /opt/app
 
