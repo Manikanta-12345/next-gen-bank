@@ -28,6 +28,7 @@ pipeline {
           if ! command -v helm &> /dev/null; then
             echo "Helm not found. Installing..."
             curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+            export PATH=$PATH:/usr/local/bin
           else
             echo "Helm already installed."
             helm version
@@ -92,7 +93,8 @@ pipeline {
       steps {
         sh '''
           cd helm-repo/environments/dev-env
-          helm dependency build
+          helm repo add bitnami https://charts.bitnami.com/bitnami || true
+          helm dependency update
         '''
       }
     }
