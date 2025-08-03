@@ -77,10 +77,10 @@ pipeline {
             git config user.name "Manikanta-12345"
 
             # Update image tag in values.yml
-            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-bank-helm/next-gen-config-server/values.yml
+            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-config-server/values.yml
 
             # Commit and push the change
-            git add next-gen-bank-helm/next-gen-config-server/values.yml
+            git add next-gen-config-server/values.yml
             git commit -m "Update configserver image to version ${BUILD_NUMBER}"
             git push origin master
           '''
