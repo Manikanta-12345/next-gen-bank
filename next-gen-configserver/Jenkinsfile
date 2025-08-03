@@ -9,16 +9,34 @@ pipeline {
   environment {
     DOCKER_IMAGE = "mani12345/next-gen-configserver:${BUILD_NUMBER}"
     REGISTRY_CREDENTIALS = credentials('next-gen-docker')
+    GIT_REPO_NAME = "next-gen-bank-helm"
+    GIT_USER_NAME = "Manikanta-12345"
+    GIT_REPO_URL = "https://github.com/Manikanta-12345/next-gen-bank-helm.git"
   }
 
   stages {
+
     stage('Check Docker Version') {
       steps {
         sh 'docker --version'
       }
     }
 
-    stage('Checkout') {
+    stage('Install Helm if Missing') {
+      steps {
+        sh '''
+          if ! command -v helm &> /dev/null; then
+            echo "Helm not found. Installing..."
+            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          else
+            echo "Helm already installed."
+            helm version
+          fi
+        '''
+      }
+    }
+
+    stage('Checkout Source') {
       steps {
         checkout scm
       }
@@ -35,10 +53,6 @@ pipeline {
     }
 
     stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "mani12345/next-gen-configserver:${BUILD_NUMBER}"
-        REGISTRY_CREDENTIALS = credentials('next-gen-docker')
-      }
       steps {
         script {
           sh '''
@@ -53,33 +67,19 @@ pipeline {
       }
     }
 
-    stage('Update Deployment File') {
-      environment {
-        GIT_REPO_NAME = "next-gen-bank-helm"
-        GIT_USER_NAME = "Manikanta-12345"
-        GIT_REPO_URL = "https://github.com/Manikanta-12345/next-gen-bank-helm.git"
-      }
+    stage('Update Helm Chart') {
       steps {
         withCredentials([string(credentialsId: 'next-gen-git-secret', variable: 'GITHUB_TOKEN')]) {
           sh '''
-            # Clean up any previous clone
             rm -rf helm-repo
-
-            # Clone the Helm repo
             git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git helm-repo
-
             cd helm-repo
 
-            ls -R
-
-            # Set Git config
             git config user.email "suryamutyala757@gmail.com"
             git config user.name "Manikanta-12345"
 
-            # Update image tag in values.yml
             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-config-server/values.yaml
 
-            # Commit and push the change
             git add next-gen-config-server/values.yaml
             git commit -m "Update configserver image to version ${BUILD_NUMBER}"
             git push origin master
@@ -88,5 +88,13 @@ pipeline {
       }
     }
 
+    stage('Build Helm Dependencies') {
+      steps {
+        sh '''
+          cd helm-repo/environments/dev-env
+          helm dependency build
+        '''
+      }
+    }
   }
 }
