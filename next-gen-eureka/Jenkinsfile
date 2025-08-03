@@ -101,7 +101,7 @@ pipeline {
           git config user.name "Manikanta-12345"
 
           # Add and commit updated charts directory
-          git add charts/
+          git add Chart.lock charts/
           git commit -m "Update Helm dependencies"
 
           # Push to remote
