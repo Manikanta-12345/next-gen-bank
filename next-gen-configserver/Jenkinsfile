@@ -70,6 +70,8 @@ pipeline {
 
             cd helm-repo
 
+            ls -R
+
             # Set Git config
             git config user.email "suryamutyala757@gmail.com"
             git config user.name "Manikanta-12345"
