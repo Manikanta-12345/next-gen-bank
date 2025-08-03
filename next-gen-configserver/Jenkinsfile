@@ -26,7 +26,7 @@ pipeline {
 
     stage('Build and Test') {
       steps {
-        sh 'cd next-gen-configserver && sudo rm -rf target || true'
+        sh 'cd next-gen-configserver && rm -rf target || true'
 
         sh 'cd next-gen-configserver && mvn clean package -DskipTests=true'
       }
