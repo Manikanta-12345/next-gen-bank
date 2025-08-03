@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    DOCKER_IMAGE = "mani12345/next-gen-configserver:${BUILD_NUMBER}"
+    DOCKER_IMAGE = "mani12345/next-gen-eureka:${BUILD_NUMBER}"
     REGISTRY_CREDENTIALS = credentials('next-gen-docker')
     GIT_REPO_NAME = "next-gen-bank-helm"
     GIT_USER_NAME = "Manikanta-12345"
