@@ -78,6 +78,7 @@ pipeline {
 
             git config user.email "suryamutyala757@gmail.com"
             git config user.name "Manikanta-12345"
+            cp next-gen-config-server/values.yaml.template next-gen-config-server/values.yaml
 
             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-config-server/values.yaml
 
