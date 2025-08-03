@@ -94,7 +94,7 @@ pipeline {
         sh '''
           cd helm-repo/environments/dev-env
           helm repo add bitnami https://charts.bitnami.com/bitnami || true
-          helm dependency update
+          helm dependencies build
         '''
       }
     }
