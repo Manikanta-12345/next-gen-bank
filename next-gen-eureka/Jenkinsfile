@@ -95,7 +95,7 @@ pipeline {
         sh '''
           cd helm-repo/environments/dev-env
           helm repo add bitnami https://charts.bitnami.com/bitnami || true
-          helm dependencies build
+          helm dependency update
           # Git config (if not set globally)
           git config user.email "suryamutyala757@gmail.com"
           git config user.name "Manikanta-12345"
