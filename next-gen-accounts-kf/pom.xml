@@ -87,6 +87,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>next-gen-accounts-kf</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
