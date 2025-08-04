@@ -3,4 +3,4 @@ spring:
     name: next-gen-gateway
 
   config:
-    import: "optional:configserver:http://${CONFIGSERVER_URL}:8084/"
+    import: "optional:configserver:http://localhost:8071/"
