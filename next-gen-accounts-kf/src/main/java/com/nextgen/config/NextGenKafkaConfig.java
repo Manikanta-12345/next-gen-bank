@@ -83,7 +83,7 @@ public class NextGenKafkaConfig {
     @Bean
     public ProducerFactory<Object, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092,localhost:9093,localhost:9094");
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, nextGenKafkaBootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
