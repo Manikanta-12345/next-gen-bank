@@ -4,7 +4,7 @@ spring:
     name: next-gen-uams
 
   config:
-    import: "optional:configserver:http://${CONFIGSERVER_URL}:8084/"
+    import: "optional:configserver:http://localhost:8071/"
 
 
 

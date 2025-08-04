@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    DOCKER_IMAGE = "mani12345/next-gen-configserver:${BUILD_NUMBER}"
+    DOCKER_IMAGE = "mani12345/next-gen-uams:${BUILD_NUMBER}"
     REGISTRY_CREDENTIALS = credentials('next-gen-docker')
     GIT_REPO_NAME = "next-gen-bank-helm"
     GIT_USER_NAME = "Manikanta-12345"
@@ -46,7 +46,7 @@ pipeline {
     stage('Build and Test') {
       steps {
         sh '''
-          cd next-gen-configserver
+          cd next-gen-uams
           rm -rf target || true
           mvn clean package -DskipTests=true
         '''
@@ -57,7 +57,7 @@ pipeline {
       steps {
         script {
           sh '''
-            cd next-gen-configserver
+            cd next-gen-uams
             docker build -t ${DOCKER_IMAGE} .
           '''
           def dockerImage = docker.image("${DOCKER_IMAGE}")
@@ -78,12 +78,12 @@ pipeline {
 
             git config user.email "suryamutyala757@gmail.com"
             git config user.name "Manikanta-12345"
-            cp next-gen-config-server/values.yaml.template next-gen-config-server/values.yaml
+            cp next-gen-uams/values.yaml.template next-gen-uams/values.yaml
 
-            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-config-server/values.yaml
+            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-uams/values.yaml
 
-            git add next-gen-config-server/values.yaml
-            git commit -m "Update configserver image to version ${BUILD_NUMBER}"
+            git add next-gen-uams/values.yaml
+            git commit -m "Update next-gen-uams image to version ${BUILD_NUMBER}"
             git push origin master
           '''
         }
