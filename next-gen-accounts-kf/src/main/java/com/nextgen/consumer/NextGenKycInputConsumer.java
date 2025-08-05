@@ -25,7 +25,11 @@ public class NextGenKycInputConsumer {
         this.kycProcessorService = kycProcessorService;
     }
 
-    @KafkaListener(topics = KafkaTopics.KYC_INPUT_TOPIC)
+    @KafkaListener(
+            topics = "next.gen.kyc.input.request",
+            groupId = "next-gen-kyc-input-consumer",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void handleKycInputEvent(@Payload NextGenKycEvent kycUploadEvent,
                                     @Header(KafkaHeaders.RECEIVED_KEY) String customerId) {
 
