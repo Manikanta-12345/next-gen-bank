@@ -25,7 +25,7 @@ public class NextGenKycService {
                 log.error("Failed to send NextGenKycEvent: {}", nextGenKycEvent, throwable);
                 throw new RuntimeException("Exception while sending NextGenKycEvent");
             }else  {
-                log.info("Send NextGenKycEvent Successfull: {}", nextGenKycEvent);
+                log.info("Send NextGenKycEvent Successfull: {}", nextGenKycEvent1.getRecordMetadata());
             }
         });
 
