@@ -26,6 +26,14 @@ public class NextGenGatewayApplication {
                         )
                         .uri("lb://next-gen-uams")
                 )
+                .route(p -> p
+                        .path("/next-gen-bank/accounts/**")
+                        .filters(f -> f
+                                .rewritePath("/next-gen-bank/accounts/(?<segment>.*)", "/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+                        )
+                        .uri("lb://next-gen-accounts-kf")
+                )
                 .build();
     }
 
