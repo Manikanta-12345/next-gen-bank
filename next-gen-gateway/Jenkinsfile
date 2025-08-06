@@ -83,7 +83,7 @@ pipeline {
             sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" next-gen-gateway/values.yaml
 
             git add next-gen-gateway/values.yaml
-            git commit -m "Update next-gen-gateway image to version ${BUILD_NUMBER}"
+            git commit -m "Update next-gen-gateway  image to version ${BUILD_NUMBER}"
             git push origin master
           '''
         }
